@@ -1,0 +1,224 @@
+Initial MongoDB studies. 
+Main reference: https://www.w3schools.com/mongodb
+
+CREATE DATABASE:
+
+You can change or create a new database by typing "use" then the name of the database.
+
+Ex: use blog
+use("MyFirstDatabase")
+
+-----------------------------------------
+
+CREATE COLLECTION:
+
+There are 2 ways to create a collection.
+
+.1st way:
+db.createCollection("collectionName")
+
+.2nd way:
+Create a collection during the insert process.
+db.collectionName.insertOne(obj)
+
+-----------------------------------------
+
+INSERT DATA (CREATE, POST):
+
+There are 2 methods to insert.
+
+.1st method (insertOne):
+This method inserts a single object into the database.
+
+Ex:
+db.posts.insertOne({
+  title: "Post Title 1",
+  body: "Body of post.",
+  category: "News",
+  likes: 1,
+  tags: ["news", "events"],
+  date: Date()
+})
+
+.2nd method (insertMany):
+This method inserts an array of objects into the database, inserts multiple documents at once.
+
+Ex:
+db.posts.insertMany([  
+  {
+    title: "Post Title 2",
+    body: "Body of post.",
+    category: "Event",
+    likes: 2,
+    tags: ["news", "events"],
+    date: Date()
+  },
+  {
+    title: "Post Title 3",
+    body: "Body of post.",
+    category: "Technology",
+    likes: 3,
+    tags: ["news", "events"],
+    date: Date()
+  },
+  {
+    title: "Post Title 4",
+    body: "Body of post.",
+    category: "Event",
+    likes: 4,
+    tags: ["news", "events"],
+    date: Date()
+  }
+])
+
+-----------------------------------------
+
+FIND DATA (READ, GET):
+
+There are 2 methods to find and select data.
+
+.1st method (find()):
+This method accepts a query object. 
+If left empty, all documents will be returned.
+
+Ex:
+db.posts.find()
+
+.2nd method (findOne()):
+Also accepts a query object. If left empty, it will return the first document it finds.
+
+Ex:
+db.posts.findOne()
+
+FILTER (optional parameter)
+To query, or filter, data we can include a query in our find() or findOne() methods.
+
+Ex:
+db.posts.find( {category: "News"} )
+This would return only objects where the "category" is "News".
+
+PROJECTION (optional parameter)
+Both find methods accept a second parameter called projection.
+This parameter is an object that describes which fields to include in the results.
+
+We use a 1 to include a field and 0 to exclude a field.
+
+Projections must use 1 or 0, not both;
+Must be "Inclusive" or "exclusive";
+(The _id field is the exception and can be excluded in a "inclusive projetion")
+
+Include example: (From all fields, only get "title" and "date")
+db.posts.find({}, {title: 1, date: 1})
+
+Exclude example: (Get all fields but "category")
+db.posts.find({}, {category: 0})
+
+ERROR EXAMPLE:
+db.posts.find({}, {title: 1, date: 0})
+
+-----------------------------------------
+
+UPDATE DATA 
+
+There are two methods: updateOne() or updateMany()
+
+The first parameter is a query object to define which document or documents should be updated.
+
+The second parameter is an object defining the updated data.
+
+.1st method (updateOne()):
+Updates the first document that is found matching the provided query.
+
+Ex:
+db.posts.updateOne( { title: "Post Title 1" }, { $set: { likes: 2 } } )     
+
+.2nd method (updateMany()):
+Updates all documents that match the provided query.
+
+Ex: (Increment every like by 1)
+db.posts.updateMany({}, { $inc: { likes: 1 } })
+
+-----------------------------------------
+
+DELETE DATA
+
+There are two methods: deleteOne() or deleteMany()
+
+These methods accept a query object. The matching documents will be deleted.
+
+.1st method (deleteOne()):
+Deletes the first document that matches the query provided.
+
+Ex: 
+db.posts.deleteOne({ title: "Post Title 5" })
+
+.2nd method (deleteMany()):
+Deletes all documents that matches the query.
+
+Ex:
+db.posts.deleteMany({ category: "Technology" })
+
+-----------------------------------------
+
+[
+  {
+    "key": 1,
+    "name": "Kaká",
+    "lastname": "Kaká",
+    "occupation": "Soccer Player"
+  },
+  {
+    "key": 2,
+    "name": "Neymar",
+    "lastname": "Junior",
+    "occupation": "Soccer Player"
+  },
+  {
+    "key": 3,
+    "name": "Ronaldinho",
+    "lastname": "Wizard",
+    "occupation": "Soccer Player"
+  },
+  {
+    "key": 4,
+    "name": "Ronaldo",
+    "lastname": "Phenomenon",
+    "occupation": "Soccer Player"
+  },
+  {
+    "key": 5,
+    "name": "Charles",
+    "lastname": "Leclerc",
+    "occupation": "Formula 1 driver"
+  },
+  {
+    "key": 6,
+    "name": "Max",
+    "lastname": "Verstappen",
+    "occupation": "Formula 1 driver"
+  },
+  {
+    "key": 7,
+    "name": "Pierre",
+    "lastname": "Gasly",
+    "occupation": "Formula 1 driver"
+  },
+  {
+    "key": 8,
+    "name": "Don",
+    "lastname": "Corleone",
+    "occupation": "Family member"
+  },
+  {
+    "key": 9,
+    "name": "John",
+    "lastname": "Doe",
+    "occupation": "Not known"
+  },
+  {
+    "key": 10,
+    "name": "John",
+    "lastname": "Lord",
+    "occupation": "Keyboard master"
+  }
+]
