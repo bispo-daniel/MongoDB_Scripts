@@ -1,6 +1,9 @@
 Initial MongoDB studies. 
 Main reference: https://www.w3schools.com/mongodb
 
+VSCode -- MongoDB file must have the ".mongodb.js" extension
+Ex: InsertingDocs.mongodb.js
+
 CREATE DATABASE:
 
 You can change or create a new database by typing "use" then the name of the database.
