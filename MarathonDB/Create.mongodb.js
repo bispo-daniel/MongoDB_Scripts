@@ -12,7 +12,7 @@ db.athletes.insertMany(
         },
         {
             rank: 2,
-            team: "Nederland",
+            team: "Netherlands",
             name: "Abdi Nageeye",
             time: "2:09:58"
         },
