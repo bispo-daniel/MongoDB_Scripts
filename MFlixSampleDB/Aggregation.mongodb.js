@@ -1,5 +1,4 @@
 // This file manipulates the MongoDB sample database called MFlix
-
 use("sample_mflix")
 
 // Query the number of movies from 1999
@@ -61,3 +60,35 @@ db.movies.aggregate(
         }
     ]
 ).toArray()
+
+// Join two collections: "movies" and "comments"
+// Join the comments' documents from the movie "The Godfather"
+db.movies.aggregate(
+    [
+        {
+            $match: {
+                title: "The Godfather"
+            }
+        },
+        {
+            $lookup: {
+                from: "comments",
+                localField: "_id",  // Field from "movies"
+                foreignField: "movie_id",   // Field from "comments"
+                as: "Comments from The Godfather's audience:"
+            }
+        },
+        {
+            $project: {
+                _id: 0,
+                title: 1,
+                "Comments from The Godfather's audience:.text": 1
+            }
+        },
+        {
+            $addFields: {
+              "My comment": "VERY NICE! GREAT SUCCESS!"
+            }
+        }
+    ]
+)
