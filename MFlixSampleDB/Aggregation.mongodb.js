@@ -16,7 +16,7 @@ db.movies.aggregate(
     ]
 )
 
-// Query 
+// Query movies with imdb rating greater than 5 sorted by the imdb rating
 db.movies.aggregate(
     [
         {
