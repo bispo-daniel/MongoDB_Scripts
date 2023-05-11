@@ -75,20 +75,112 @@ db.movies.aggregate(
                 from: "comments",
                 localField: "_id",  // Field from "movies"
                 foreignField: "movie_id",   // Field from "comments"
-                as: "Comments from The Godfather's audience:"
+                as: "Comments from The Godfather's audience"
             }
         },
         {
             $project: {
                 _id: 0,
                 title: 1,
-                "Comments from The Godfather's audience:.text": 1
+                "Comments from The Godfather's audience.text": 1
             }
         },
         {
             $addFields: {
               "My comment": "VERY NICE! GREAT SUCCESS!"
             }
+        }
+    ]
+)
+
+// JOIN comments of "Theon Greyjoy" with it's movies sorted by imdb rating
+db.comments.aggregate(
+    [
+        {
+            $match: {
+                name: "Theon Greyjoy"
+            }
+        },
+        {
+            $lookup: {
+              from: "movies",
+              localField: "movie_id",
+              foreignField: "_id",
+              as: "movie"
+            }
+        },
+        {
+            $project: {
+                _id: 0,
+                name: 1,
+                text: 1,
+                "movie.title": 1,
+                "movie.imdb.rating": 1
+            }
+        },
+        {
+            $sort: {
+                "movie.imdb.rating": -1
+            }
+        }
+    ]
+)
+
+// Getting the top 10 movies ranked by imdb rating
+// Adding to a new collection called
+// "Top 10 movies ranked by IMDb"
+db.movies.aggregate(
+    [
+        {
+            $match: {
+                type: "movie",
+                "imdb.rating": {
+                    $gt: 8
+                },
+                genres: {
+                    $ne: "Documentary"
+                }
+            }
+        },
+        {
+            $sort: {
+                "imdb.rating": -1
+            }
+        },
+        {
+            $project: {
+                _id: 0,
+                title: 1
+            }
+        },
+        {
+            $limit: 10
+        },
+        {
+            $out: "Top 10 movies ranked by IMDb"
+        }
+    ]
+)
+
+//Index search movies that has "lebowski" in the title
+db.movies.aggregate(
+    [
+        {
+            $search: {
+              index: 'movies_index',
+              text: {
+                query: 'lebowski',
+                path: 'title'
+              }
+            }
+        },
+        {
+            $project: {
+                _id: 0,
+                title: 1,
+                year: 1,
+                "imdb.rating": 1
+            }   
         }
     ]
 )
